@@ -10,45 +10,54 @@
 
 body {
   margin: 0;
-  min-height: 100vh;          /* allows scrolling */
+  min-height: 100vh;          
   background: linear-gradient(135deg, #ffd1dc, #fff0f6);
   font-family: 'Segoe UI', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: hidden;          /* hides horizontal scroll */
+  overflow-x: hidden;          
+  overflow-y: auto; /* allow scrolling */
 }
 
 /* First screen */
 .container {
   text-align: center;
   z-index: 2;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: center;
+  gap: 20px; 
+  height: 100vh; 
 }
 
+/* Heading */
 h1 {
   color: #d6336c;
   font-size: 1.9rem;
   margin-bottom: 30px;
 }
 
+/* Buttons */
 button {
   padding: 14px 28px;
   font-size: 18px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  margin: 10px;
+  margin: 0;
+  transition: transform 0.2s;
+  position: relative;
 }
 
+/* YES button */
 #yesBtn {
   background-color: #ff4d6d;
   color: white;
 }
 
+/* NO button */
 #noBtn {
   background-color: #adb5bd;
   color: black;
-  position: absolute;
 }
 
 /* Floating hearts */
@@ -81,7 +90,7 @@ button {
 }
 
 .love-text {
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #180005;
   font-style: italic;
   font-family: 'Times New Roman', Times, serif;
@@ -142,21 +151,32 @@ const messages = [
   "You can’t escape 😈"
 ];
 
+// Move No button and show message
 function moveNoButton() {
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+  const padding = 20; // don't touch edges
 
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
+  const maxX = window.innerWidth - btnWidth - padding;
+  const maxY = window.innerHeight - btnHeight - padding;
 
-  noScale -= 0.08;
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+
+  noBtn.style.position = "absolute";
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+
+  // scale effect
+  noScale -= 0.05;
   if (noScale < 0.4) noScale = 0.4;
   noBtn.style.transform = `scale(${noScale})`;
 
-  noBtn.textContent =
-    messages[Math.floor(Math.random() * messages.length)];
+  // Random message
+  noBtn.textContent = messages[Math.floor(Math.random() * messages.length)];
 }
 
+// Events
 noBtn.addEventListener("mouseover", moveNoButton);
 noBtn.addEventListener("touchstart", moveNoButton);
 
@@ -167,7 +187,7 @@ yesBtn.addEventListener("click", () => {
   loveScreen.style.display = "block";
 });
 
-// Hearts
+// Floating hearts
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
